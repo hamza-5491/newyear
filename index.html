@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy New Year</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{overflow:hidden;background:#000;color:#fff}
+
+.page{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:20px;
+}
+.page.active{display:flex}
+
+.btn{
+  margin-top:30px;
+  padding:14px 32px;
+  border:none;
+  border-radius:40px;
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  transition:.3s;
+}
+.btn:hover{transform:scale(1.05)}
+
+.gradient{
+  background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+}
+
+.countdown{
+  font-size:60px;
+  letter-spacing:10px;
+}
+
+video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-1;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  width:100%;
+  max-width:900px;
+}
+.card{
+  background:rgb(0 0 0 / 41%);
+  border-radius:20px;
+  padding:20px;
+  text-align:center;
+}
+
+iframe{
+  width:100%;
+  height:300px;
+  border-radius:20px;
+  border:none;
+}
+
+.slider{
+  position:relative;
+  width:100%;
+  max-width:600px;
+  height:300px;
+}
+.slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity 1s;
+}
+.slide img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:20px;
+}
+
+.letter{
+  max-width:600px;
+  font-size:18px;
+  line-height:1.6;
+  background:rgb(0 0 0 / 41%);
+
+  padding:30px;
+  border-radius:20px;
+}
+
+.emoji{
+  position:absolute;
+  bottom:-50px;
+  animation:float 6s linear infinite;
+  font-size:20px;
+}
+
+@keyframes float{
+  to{transform:translateY(-110vh);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div class="page active gradient" id="p0">
+  <h1>New Year Countdown</h1>
+  <div class="" style="display: flex; flex-wrap: wrap; justify-content: center; margin-top: 10px; gap: 10px;">
+      <div class="countdown card" style="margin-right: 10px; margin-top: 4px;">00</div>
+      <div class="countdown card" style="margin-right: 10px; margin-top: 4px;">00</div>
+      <div class="countdown card" style="margin-right: 10px; margin-top: 4px;">00</div>
+      <div class="countdown card" style="margin-right: 10px; margin-top: 4px;" id="count">06</div>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p1">
+  <video autoplay muted loop>
+    <source src="bg-video.mp4">
+  </video>
+  <h1>🎉 Happy New Year to the queen of my heart 🎉</h1>
+  <button class="btn" onclick="next()">Next</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page gradient" id="p2">
+  <div class="cards">
+    <div class="card">
+      <h2>New Beginnings</h2>
+      <p>A fresh start with new goals.</p>
+    </div>
+    <div class="card">
+      <h2>New Hope</h2>
+      <p>Better days are coming.</p>
+    </div>
+  </div>
+  <button class="btn" onclick="next()">Next</button>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page gradient" id="p3">
+  <h2>Distance That Connects</h2>
+  <iframe src="https://maps.google.com/maps?q=Australia%20to%20Sahiwal&t=&z=3&ie=UTF8&iwloc=&output=embed"></iframe>
+  <button class="btn" onclick="next()">Next</button>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page gradient" id="p4">
+    <div>
+        <h1>Memories</h1>
+    </div>
+  <div class="slider">
+    <div class="slide"><img src="https://picsum.photos/600/300?1"></div>
+    <div class="slide"><img src="https://picsum.photos/600/300?2"></div>
+    <div class="slide"><img src="https://picsum.photos/600/300?3"></div>
+  </div>
+  <button class="btn" onclick="next()">Next</button>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page gradient" id="p5">
+  <div class="letter" id="letter"></div>
+</div>
+
+<script>
+const pages=document.querySelectorAll(".page");
+let current=0;
+
+function show(i){
+  pages.forEach(p=>p.classList.remove("active"));
+  pages[i].classList.add("active");
+  current=i;
+}
+
+function next(){
+  if(current<pages.length-1){
+    show(current+1);
+    if(current===5) startType();
+  }
+}
+
+/* COUNTDOWN */
+let t=6;
+const c=document.getElementById("count");
+const timer=setInterval(()=>{
+  c.textContent=String(t).padStart(2,"0");
+  t--;
+  if(t<0){clearInterval(timer);show(1);}
+},1000);
+
+/* SLIDER */
+let s=0;
+const slides=document.querySelectorAll(".slide");
+slides[0].style.opacity=1;
+setInterval(()=>{
+  slides.forEach(sl=>sl.style.opacity=0);
+  slides[s].style.opacity=1;
+  s=(s+1)%slides.length;
+},3000);
+
+/* TYPEWRITER */
+const msg=`Dear Friend,
+
+This year taught us patience,
+strength, and hope.
+
+May the coming year
+bring peace, success,
+and happiness.
+
+Happy New Year ❤️`;
+let i=0;
+function startType(){
+  const box=document.getElementById("letter");
+  if(i<=msg.length){
+    box.textContent=msg.slice(0,i++);
+    setTimeout(startType,40);
+  }
+}
+
+/* EMOJIS */
+setInterval(()=>{
+  const e=document.createElement("div");
+  e.className="emoji";
+  e.textContent=Math.random()>0.5?"🎉":"❤️";
+  e.textContent=Math.random()>0.5?"🎉":"❤️";
+  e.textContent=Math.random()>0.5?"🎉":"❤️";
+  e.style.left=Math.random()*100+"vw";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+},1000);
+</script>
+
+</body>
+</html>
